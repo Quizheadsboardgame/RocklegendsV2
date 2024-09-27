@@ -3,170 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Legends Quiz</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap">
+    <title>ROCK LEGENDS</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            font-family: 'Baloo 2', sans-serif;
-            background-color: #38B6FF; /* Background color */
+            background-color: transparent;
             color: black;
-            flex-direction: column;
-            margin: 0;
+            text-align: center;
         }
 
-        #yellow-box {
-            width: 200px;
-            height: 200px;
-            background-color: #FED405; /* Yellow color */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            cursor: pointer;
-            color: black;
-            font-weight: bold;
+        #quiz-container {
+            background-color: transparent;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        #logo {
+            width: 150px;
             margin-bottom: 20px;
-            text-align: center;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
-            border: 5px solid black; /* Black edging */
-            transition: transform 0.1s ease-in-out;
         }
 
-        #question-answer {
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        #next-button {
+            background-color: white;
+            color: black;
+            border: 2px solid #ff9900;
+            padding: 15px;
             margin-top: 20px;
-            font-size: 18px;
-            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
         }
 
-        /* Keyframes for the bounce animation */
-        @keyframes bounce {
-            0%, 100% {
-                transform: scale(1);
+        #next-button:hover {
+            background-color: #ffcc00;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
             }
-            50% {
-                transform: scale(1.1);
+            to {
+                opacity: 0;
             }
         }
 
-        /* Class to trigger the bounce animation */
-        .animate-bounce {
-            animation: bounce 0.3s ease-in-out;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s forwards;
         }
     </style>
 </head>
 <body>
 
-    <div id="yellow-box">ROCK LEGENDS</div>
+<div id="quiz-container">
+    <img id="logo" src="https://i.imgur.com/cyZ0Z21.png" alt="Rock Legends Logo">
+    <h1>ROCK LEGENDS</h1>
+    <div id="question-container">
+        <div class="question" id="question">Loading question...</div>
+        <div class="answer" id="answer">Loading answer...</div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
 
-    <div id="question-answer"></div>
+<script>
+    // Question and answers data
+    const quizData = [
+        { question: "Which band released the iconic album 'Led Zeppelin IV'?", answer: "Led Zeppelin" },
+        { question: "What song by Queen features the lyrics 'Is this the real life? Is this just fantasy'?", answer: "Bohemian Rhapsody" },
+        { question: "Which guitar legend is known for his song 'Purple Haze'?", answer: "Jimi Hendrix" },
+        { question: "What 1975 album by Pink Floyd is known for its concept about mental illness?", answer: "Wish You Were Here" },
+        { question: "Which rock band is famous for their song 'Sweet Child O' Mine'?", answer: "Guns N' Roses" },
+        { question: "What iconic rock singer was known as 'The Boss'?", answer: "Bruce Springsteen" },
+        { question: "Which band is known for their song 'Hotel California'?", answer: "The Eagles" },
+        { question: "What 1991 album by Nirvana is considered a defining moment of grunge music?", answer: "Nevermind" },
+        { question: "Which legendary musician is known for the song 'Space Oddity'?", answer: "David Bowie" },
+        { question: "What song by The Rolling Stones features the lyrics 'You can't always get what you want'?", answer: "You Can't Always Get What You Want" },
+        { question: "Which band is known for their album 'Back in Black'?", answer: "AC/DC" },
+        { question: "What 1980 album by AC/DC is known for its high-voltage rock anthems?", answer: "Back in Black" },
+        { question: "Which rock band is famous for the song 'Livin' on a Prayer'?", answer: "Bon Jovi" },
+        { question: "What 1976 album by Fleetwood Mac is known for its hits like 'Rhiannon' and 'Go Your Own Way'?", answer: "Rumours" },
+        { question: "Which band is known for their song 'Smells Like Teen Spirit'?", answer: "Nirvana" },
+        { question: "What rock legend released the song 'Imagine' in 1971?", answer: "John Lennon" },
+        { question: "Which band is known for their song 'We Will Rock You'?", answer: "Queen" },
+        { question: "What 1967 album by The Beatles features the song 'Lucy in the Sky with Diamonds'?", answer: "Sgt. Pepper's Lonely Hearts Club Band" },
+        { question: "Which iconic rock musician is known for his hit 'Born to Run'?", answer: "Bruce Springsteen" },
+        { question: "What 1984 album by Madonna is known for its hit singles like 'Like a Virgin'?", answer: "Like a Virgin" },
+        { question: "Which rock band released the song 'Dream On'?", answer: "Aerosmith" },
+        { question: "What 1985 album by Dire Straits includes the hit song 'Money for Nothing'?", answer: "Brothers in Arms" },
+        { question: "Which rock band is known for their album 'Dark Side of the Moon'?", answer: "Pink Floyd" },
+        { question: "What 1973 album by The Rolling Stones features the song 'Angie'?", answer: "Goats Head Soup" },
+        { question: "Which musician is known for his song 'Comfortably Numb'?", answer: "Pink Floyd" },
+        { question: "What 1969 album by The Rolling Stones is known for its bluesy rock tracks?", answer: "Let It Bleed" },
+        { question: "Which rock band is famous for their song 'Under Pressure'?", answer: "Queen & David Bowie" },
+        { question: "What 2000 album by Radiohead is known for its experimental sound?", answer: "Kid A" },
+        { question: "Which rock musician released the song 'Voodoo Child (Slight Return)'?", answer: "Jimi Hendrix" },
+        { question: "What band is known for the song 'Sweet Home Alabama'?", answer: "Lynyrd Skynyrd" },
+        { question: "Which rock legend released the album 'Born to Run'?", answer: "Bruce Springsteen" },
+        { question: "What 1978 album by The Clash features the song 'London Calling'?", answer: "London Calling" },
+        { question: "Which band released the song 'Another Brick in the Wall'?", answer: "Pink Floyd" },
+        { question: "What 1974 album by Led Zeppelin is known for its legendary track 'Stairway to Heaven'?", answer: "Led Zeppelin IV" },
+        { question: "Which band released the iconic song 'Hotel California'?", answer: "The Eagles" },
+        { question: "What 1980 album by AC/DC features the hit song 'You Shook Me All Night Long'?", answer: "Back in Black" },
+        { question: "Which rock band is known for their song 'Jump'?", answer: "Van Halen" },
+        { question: "What 1971 album by The Rolling Stones features the song 'Brown Sugar'?", answer: "Sticky Fingers" },
+        { question: "Which musician released the album 'Let It Be'?", answer: "The Beatles" },
+        { question: "What 1970 album by Neil Young is known for its politically charged lyrics?", answer: "After the Gold Rush" },
+        { question: "Which rock band is famous for the song 'Born to Run'?", answer: "Bruce Springsteen" },
+        { question: "What 1989 album by Madonna features the hit single 'Like a Prayer'?", answer: "Like a Prayer" },
+        { question: "Which rock legend released the album 'The Wall'?", answer: "Pink Floyd" },
+        { question: "What 1985 album by Bruce Springsteen features the song 'Dancing in the Dark'?", answer: "Born in the U.S.A." },
+        { question: "Which rock band is known for the hit song 'We Are the Champions'?", answer: "Queen" },
+        { question: "What 2001 album by The Strokes features the song 'Last Nite'?", answer: "Is This It" },
+        { question: "Which rock musician is known for his song 'Little Wing'?", answer: "Jimi Hendrix" },
+        { question: "What 1967 album by The Beatles features 'With a Little Help from My Friends'?", answer: "Sgt. Pepper's Lonely Hearts Club Band" },
+        { question: "Which band is known for the song 'Bohemian Rhapsody'?", answer: "Queen" },
+        { question: "What 1972 album by David Bowie is known for the song 'Starman'?", answer: "The Rise and Fall of Ziggy Stardust and the Spiders from Mars" }
+    ];
 
-    <script>
-        const yellowBox = document.getElementById("yellow-box");
-        const questionAnswerDiv = document.getElementById("question-answer");
+    let currentQuestionIndex = 0;
 
-        // Array of questions and answers about Rock Legends
-        const rockLegendsQuestions = [
-            { question: "Which band released the iconic album 'Led Zeppelin IV'?", answer: "Led Zeppelin" },
-            { question: "What song by Queen features the lyrics 'Is this the real life? Is this just fantasy'?", answer: "Bohemian Rhapsody" },
-            { question: "Which guitar legend is known for his song 'Purple Haze'?", answer: "Jimi Hendrix" },
-            { question: "What 1975 album by Pink Floyd is known for its concept about mental illness?", answer: "Wish You Were Here" },
-            { question: "Which rock band is famous for their song 'Sweet Child O' Mine'?", answer: "Guns N' Roses" },
-            { question: "What iconic rock singer was known as 'The Boss'?", answer: "Bruce Springsteen" },
-            { question: "Which band is known for their song 'Hotel California'?", answer: "The Eagles" },
-            { question: "What 1991 album by Nirvana is considered a defining moment of grunge music?", answer: "Nevermind" },
-            { question: "Which legendary musician is known for the song 'Space Oddity'?", answer: "David Bowie" },
-            { question: "What song by The Rolling Stones features the lyrics 'You can't always get what you want'?", answer: "You Can't Always Get What You Want" },
-            { question: "Which band is known for their album 'Back in Black'?", answer: "AC/DC" },
-            { question: "What 1980 album by AC/DC is known for its high-voltage rock anthems?", answer: "Back in Black" },
-            { question: "Which rock band is famous for the song 'Livin' on a Prayer'?", answer: "Bon Jovi" },
-            { question: "What 1976 album by Fleetwood Mac is known for its hits like 'Rhiannon' and 'Go Your Own Way'?", answer: "Rumours" },
-            { question: "Which band is known for their song 'Smells Like Teen Spirit'?", answer: "Nirvana" },
-            { question: "What rock legend released the song 'Imagine' in 1971?", answer: "John Lennon" },
-            { question: "Which band is known for their song 'We Will Rock You'?", answer: "Queen" },
-            { question: "What 1967 album by The Beatles features the song 'Lucy in the Sky with Diamonds'?", answer: "Sgt. Pepper's Lonely Hearts Club Band" },
-            { question: "Which iconic rock musician is known for his hit 'Born to Run'?", answer: "Bruce Springsteen" },
-            { question: "What 1984 album by Madonna is known for its hit singles like 'Like a Virgin'?", answer: "Like a Virgin" },
-            { question: "Which rock band released the song 'Dream On'?", answer: "Aerosmith" },
-            { question: "What 1985 album by Dire Straits includes the hit song 'Money for Nothing'?", answer: "Brothers in Arms" },
-            { question: "Which rock band is known for their album 'Dark Side of the Moon'?", answer: "Pink Floyd" },
-            { question: "What 1973 album by The Rolling Stones features the song 'Angie'?", answer: "Goats Head Soup" },
-            { question: "Which musician is known for his song 'Comfortably Numb'?", answer: "Pink Floyd" },
-            { question: "What 1969 album by The Rolling Stones is known for its bluesy rock tracks?", answer: "Let It Bleed" },
-            { question: "Which rock band is famous for their song 'Under Pressure'?", answer: "Queen & David Bowie" },
-            { question: "What 2000 album by Radiohead is known for its experimental sound?", answer: "Kid A" },
-            { question: "Which rock musician released the song 'Voodoo Child (Slight Return)'?", answer: "Jimi Hendrix" },
-            { question: "What band is known for the song 'Sweet Home Alabama'?", answer: "Lynyrd Skynyrd" },
-            { question: "Which rock legend released the album 'Born to Run'?", answer: "Bruce Springsteen" },
-            { question: "What 1978 album by The Clash features the song 'London Calling'?", answer: "London Calling" },
-            { question: "Which band released the song 'Another Brick in the Wall'?", answer: "Pink Floyd" },
-            { question: "What 1974 album by Led Zeppelin is known for its legendary track 'Stairway to Heaven'?", answer: "Led Zeppelin IV" },
-            { question: "Which band released the iconic song 'Hotel California'?", answer: "The Eagles" },
-            { question: "What 1980 album by AC/DC features the hit song 'You Shook Me All Night Long'?", answer: "Back in Black" },
-            { question: "Which rock band is known for their song 'Jump'?", answer: "Van Halen" },
-            { question: "What 1971 album by The Rolling Stones features the song 'Brown Sugar'?", answer: "Sticky Fingers" },
-            { question: "Which musician released the album 'Let It Be'?", answer: "The Beatles" },
-            { question: "What 1970 album by Neil Young is known for its politically charged lyrics?", answer: "After the Gold Rush" },
-            { question: "Which rock band is famous for the song 'Born to Run'?", answer: "Bruce Springsteen" },
-            { question: "What 1989 album by Madonna features the hit single 'Like a Prayer'?", answer: "Like a Prayer" },
-            { question: "Which rock legend released the album 'The Wall'?", answer: "Pink Floyd" },
-            { question: "What 1985 album by Bruce Springsteen features the song 'Dancing in the Dark'?", answer: "Born in the U.S.A." },
-            { question: "Which rock band is known for the hit song 'We Are the Champions'?", answer: "Queen" },
-            { question: "What 2001 album by The Strokes features the song 'Last Nite'?", answer: "Is This It" },
-            { question: "Which rock musician is known for his song 'Little Wing'?", answer: "Jimi Hendrix" },
-            { question: "What 1967 album by The Beatles features 'With a Little Help from My Friends'?", answer: "Sgt. Pepper's Lonely Hearts Club Band" },
-            { question: "Which band is known for the song 'Bohemian Rhapsody'?", answer: "Queen" },
-            { question: "What 1972 album by David Bowie is known for the song 'Starman'?", answer: "The Rise and Fall of Ziggy Stardust and the Spiders from Mars" }
-        ];
-
-        let shuffledQuestions = [];
-        let questionIndex = 0;
-
-        // Shuffle the questions array
-        function shuffleArray(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex !== 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-            }
-            return array;
+    // Shuffle the quiz data
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
+    }
 
-        // Initialize questions
-        function initializeQuestions() {
-            shuffledQuestions = shuffleArray([...rockLegendsQuestions]);
-            questionIndex = 0;
-            displayQuestion();
+    // Start the quiz
+    shuffle(quizData);
+    showQuestion();
+
+    function showQuestion() {
+        const questionContainer = document.getElementById("question");
+        const answerContainer = document.getElementById("answer");
+
+        questionContainer.innerText = quizData[currentQuestionIndex].question;
+        answerContainer.innerText = "Loading answer...";
+
+        // Fade in effect
+        answerContainer.classList.remove("fadeIn");
+        answerContainer.classList.add("fadeOut");
+
+        setTimeout(() => {
+            answerContainer.innerText = quizData[currentQuestionIndex].answer;
+            answerContainer.classList.remove("fadeOut");
+            answerContainer.classList.add("fadeIn");
+        }, 500);
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            showQuestion();
+        } else {
+            const questionContainer = document.getElementById("question");
+            const answerContainer = document.getElementById("answer");
+            questionContainer.innerText = "Thank you for playing!";
+            answerContainer.innerText = "";
+            document.getElementById("next-button").style.display = "none"; // Hide the next button
         }
-
-        // Function to display the current question
-        function displayQuestion() {
-            if (shuffledQuestions.length === 0) {
-                questionAnswerDiv.innerHTML = "<strong>No more questions!</strong>";
-                return;
-            }
-            const currentQA = shuffledQuestions[questionIndex];
-            questionAnswerDiv.innerHTML = `<strong>Question:</strong> ${currentQA.question}<br><strong>Answer:</strong> ${currentQA.answer}`;
-        }
-
-        // Bounce animation on click
-        yellowBox.addEventListener("click", () => {
-            yellowBox.classList.add("animate-bounce");
-            setTimeout(() => {
-                yellowBox.classList.remove("animate-bounce");
-            }, 300);
-            questionIndex = (questionIndex + 1) % shuffledQuestions.length;
-            displayQuestion();
-        });
-
-        // Initialize the quiz
-        initializeQuestions();
-    </script>
+    }
+</script>
 
 </body>
 </html>
